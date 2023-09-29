@@ -11,7 +11,7 @@ import { sidebarLinks } from "@/constants";
 const LeftSidebar = () => {
   const pathname = usePathname();
   return (
-    <div className="background-light900_dark200 light-border msx-sm:hidden custom-scrollbar sticky left-0 top-0 flex h-screen flex-col items-start justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none lg:w-[266px]">
+    <section className="background-light900_dark200 light-border msx-sm:hidden custom-scrollbar sticky left-0 top-0 flex h-screen flex-col items-start justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-6">
         {sidebarLinks.map((item) => {
           const isActive =
@@ -76,7 +76,7 @@ const LeftSidebar = () => {
           </Link>
         </div>
       </SignedOut>
-    </div>
+    </section>
   );
 };
 
