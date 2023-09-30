@@ -5,51 +5,51 @@ import RenderTag from "../RenderTag";
 
 const hotQuestions = [
   {
-    _id: 1,
+    _id: "1",
     title:
       "Would it be appropriate to point out an error in another paper during a referee report?",
   },
   {
-    _id: 2,
+    _id: "2",
     title: "How can an airconditioning machine exist?",
   },
   {
-    _id: 3,
+    _id: "3",
     title: "Interrogated every time crossing UK Border as citizen",
   },
   {
-    _id: 4,
+    _id: "4",
     title: "Low digit addition generator",
   },
   {
-    _id: 5,
+    _id: "5",
     title: "What is an example of 3 numbers that do not make up a vector?",
   },
 ];
 
 const popularTags = [
   {
-    _id: 1,
+    _id: "1",
     name: "Javascript",
     totalQuestions: 85,
   },
   {
-    _id: 2,
+    _id: "2",
     name: "React.js",
     totalQuestions: 45,
   },
   {
-    _id: 3,
+    _id: "3",
     name: "Next.js",
     totalQuestions: 24,
   },
   {
-    _id: 4,
+    _id: "4",
     name: "Vue.js",
     totalQuestions: 2,
   },
   {
-    _id: 5,
+    _id: "5",
     name: "Redux",
     totalQuestions: 10,
   },

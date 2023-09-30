@@ -1,45 +1,47 @@
+import Link from "next/link";
+
+import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import Link from "next/link";
 
 const questions = [
   {
-    _id: 1,
+    _id: "1",
     title:
       "The Lightning Component c:LWC_PizzaTracker generated invalid output for field status. Error How to solve this",
     tags: [
       {
-        _id: 1,
+        _id: "1",
         name: "javascript",
       },
-      { _id: 2, name: "mongodb" },
+      { _id: "2", name: "mongodb" },
     ],
-    author: "John Doe",
-    upvotes: 10,
+    author: { _id: "1", name: "John Doe", picture: "john-doe.jpg" },
+    upvotes: 103321,
     views: 4,
-    answers: 3,
-    createdAt: "2021-09-01",
+    answers: [],
+    createdAt: new Date("2021-09-01T12:00:00.000Z"),
   },
   {
-    _id: 2,
+    _id: "2",
     title:
       "An HTML table where specific cells come from values in a Google Sheet identified by their neighboring cell",
     tags: [
       {
-        _id: 3,
+        _id: "3",
         name: "html",
       },
-      { _id: 4, name: "css" },
+      { _id: "4", name: "css" },
     ],
-    author: "John Doe",
+    author: { _id: "1", name: "John Doe", picture: "john-doe.jpg" },
     upvotes: 14,
     views: 41,
-    answers: 10,
-    createdAt: "2021-09-07",
+    answers: [],
+    createdAt: new Date("2023-09-02T12:00:00.000Z"),
   },
 ];
 
@@ -74,7 +76,7 @@ export default function Home() {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {questions.length > 0 ? (
-          questions.map((item) => "<QuestionCard key={item._id} />")
+          questions.map((item) => <QuestionCard key={item._id} {...item} />)
         ) : (
           <NoResult
             title="There&lsquo;s no questions to show"
