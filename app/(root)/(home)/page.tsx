@@ -1,9 +1,47 @@
 import HomeFilters from "@/components/home/HomeFilters";
 import Filter from "@/components/shared/Filter";
+import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import Link from "next/link";
+
+const questions = [
+  {
+    _id: 1,
+    title:
+      "The Lightning Component c:LWC_PizzaTracker generated invalid output for field status. Error How to solve this",
+    tags: [
+      {
+        _id: 1,
+        name: "javascript",
+      },
+      { _id: 2, name: "mongodb" },
+    ],
+    author: "John Doe",
+    upvotes: 10,
+    views: 4,
+    answers: 3,
+    createdAt: "2021-09-01",
+  },
+  {
+    _id: 2,
+    title:
+      "An HTML table where specific cells come from values in a Google Sheet identified by their neighboring cell",
+    tags: [
+      {
+        _id: 3,
+        name: "html",
+      },
+      { _id: 4, name: "css" },
+    ],
+    author: "John Doe",
+    upvotes: 14,
+    views: 41,
+    answers: 10,
+    createdAt: "2021-09-07",
+  },
+];
 
 export default function Home() {
   return (
@@ -33,6 +71,21 @@ export default function Home() {
       </div>
 
       <HomeFilters />
+
+      <div className="mt-10 flex w-full flex-col gap-6">
+        {questions.length > 0 ? (
+          questions.map((item) => "<QuestionCard key={item._id} />")
+        ) : (
+          <NoResult
+            title="There&lsquo;s no questions to show"
+            description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
+          discussion. our query could be the next big thing others learn from. Get
+          involved! 💡"
+            link="/ask-question"
+            linkTitle="Ask a Question"
+          />
+        )}
+      </div>
     </>
   );
 }
