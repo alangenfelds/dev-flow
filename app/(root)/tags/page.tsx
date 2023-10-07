@@ -5,7 +5,7 @@ import { UserFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.actions";
 import Link from "next/link";
 
-const Page = async () => {
+const TagsPage = async () => {
   const result = await getAllTags({});
 
   return (
@@ -64,4 +64,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+export default TagsPage;
