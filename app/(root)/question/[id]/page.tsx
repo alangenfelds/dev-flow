@@ -2,25 +2,18 @@ import Answer from "@/components/forms/Answer";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
-
 import RenderTag from "@/components/shared/RenderTag";
+import Votes from "@/components/shared/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
+import { getUserById } from "@/lib/actions/user.action";
 import { formatAndDivideNumber, getTimestamp } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { auth } from "@clerk/nextjs";
-import { getUserById } from "@/lib/actions/user.action";
-import Votes from "@/components/shared/Votes";
 
-type Props = {
-  searchParams: any;
-  params: { id: string };
-};
-
-const QuestionDetailsPage = async ({ params, searchParams }: Props) => {
+const Page = async ({ params, searchParams }: any) => {
   const { userId: clerkId } = auth();
-  const { id } = params;
 
   let mongoUser;
 
@@ -28,7 +21,7 @@ const QuestionDetailsPage = async ({ params, searchParams }: Props) => {
     mongoUser = await getUserById({ userId: clerkId });
   }
 
-  const result = await getQuestionById({ questionId: id });
+  const result = await getQuestionById({ questionId: params.id });
 
   return (
     <>
@@ -58,7 +51,7 @@ const QuestionDetailsPage = async ({ params, searchParams }: Props) => {
               hasupVoted={result.upvotes.includes(mongoUser._id)}
               downvotes={result.downvotes.length}
               hasdownVoted={result.downvotes.includes(mongoUser._id)}
-              hasSaved={mongoUser?.saved.includes(mongoUser._id)}
+              hasSaved={mongoUser?.saved.includes(result._id)}
             />
           </div>
         </div>
@@ -72,7 +65,7 @@ const QuestionDetailsPage = async ({ params, searchParams }: Props) => {
           imgUrl="/assets/icons/clock.svg"
           alt="clock icon"
           value={` asked ${getTimestamp(result.createdAt)}`}
-          title=""
+          title=" Asked"
           textStyles="small-medium text-dark400_light800"
         />
         <Metric
@@ -106,8 +99,10 @@ const QuestionDetailsPage = async ({ params, searchParams }: Props) => {
 
       <AllAnswers
         questionId={result._id}
-        userId={JSON.stringify(mongoUser._id)}
+        userId={mongoUser._id}
         totalAnswers={result.answers.length}
+        page={searchParams?.page}
+        filter={searchParams?.filter}
       />
 
       <Answer
@@ -119,4 +114,4 @@ const QuestionDetailsPage = async ({ params, searchParams }: Props) => {
   );
 };
 
-export default QuestionDetailsPage;
+export default Page;
