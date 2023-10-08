@@ -41,7 +41,7 @@ export async function createQuestion({
         {
           // action
           $setOnInsert: { name: tag },
-          $push: { question: question._id },
+          $push: { questions: question._id },
         },
         {
           // options
