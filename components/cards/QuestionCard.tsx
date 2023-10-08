@@ -7,6 +7,7 @@ import { formatAndDivideNumber, getTimestamp } from "@/lib/utils";
 type Props = {
   _id: string;
   title: string;
+  clerkId?: string | null;
   tags: { _id: string; name: string }[];
   author: { _id: string; name: string; picture: string };
   upvotes: string[];
@@ -17,6 +18,7 @@ type Props = {
 
 const QuestionCard = ({
   _id,
+  clerkId,
   title,
   tags,
   author,
