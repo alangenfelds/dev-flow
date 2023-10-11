@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
-  type: string;
+  type: "Question" | "Answer";
   itemId: string;
 }
 
