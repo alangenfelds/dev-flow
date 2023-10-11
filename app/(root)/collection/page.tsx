@@ -4,19 +4,19 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-export default async function Home() {
+export default async function Collections({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
 
   if (!userId) redirect("/sign-in");
 
-  const result: { questions: any[] } = (await getSavedQuestions({
+  const result = await getSavedQuestions({
     clerkId: userId,
-  })) || {
-    questions: [],
-  };
+    searchQuery: searchParams.q,
+  });
 
   return (
     <>

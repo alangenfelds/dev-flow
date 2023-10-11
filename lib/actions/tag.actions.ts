@@ -34,11 +34,15 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   }
 }
 
-export async function getAllTags(params: GetAllTagsParams) {
+export async function getAllTags({ searchQuery }: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const tags = await Tag.find({});
+    const query: FilterQuery<typeof Tag> = searchQuery
+      ? { name: { $regex: new RegExp(searchQuery, "i") } }
+      : {};
+
+    const tags = await Tag.find(query);
 
     return { tags };
   } catch (error) {
@@ -47,12 +51,14 @@ export async function getAllTags(params: GetAllTagsParams) {
   }
 }
 
-export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
+export async function getQuestionsByTagId({
+  tagId,
+  page = 1,
+  pageSize = 10,
+  searchQuery,
+}: GetQuestionsByTagIdParams) {
   try {
     connectToDatabase();
-
-    // eslint-disable-next-line no-unused-vars
-    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
