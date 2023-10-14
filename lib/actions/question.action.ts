@@ -68,7 +68,10 @@ export async function createQuestion({
   }
 }
 
-export const getQuestions = async ({ searchQuery }: GetQuestionsParams) => {
+export const getQuestions = async ({
+  searchQuery,
+  filter,
+}: GetQuestionsParams) => {
   try {
     connectToDatabase();
 
@@ -81,6 +84,25 @@ export const getQuestions = async ({ searchQuery }: GetQuestionsParams) => {
       ];
     }
 
+    let sortOptions = {};
+
+    switch (filter) {
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+
+      case "frequent":
+        sortOptions = { views: -1 };
+        break;
+
+      case "unanswered":
+        query.answers = { $size: 0 };
+        break;
+
+      default:
+        break;
+    }
+
     const questions = await Question.find(query)
       .populate({
         path: "tags",
@@ -90,7 +112,7 @@ export const getQuestions = async ({ searchQuery }: GetQuestionsParams) => {
         path: "author",
         model: User,
       })
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
 
     return { questions };
   } catch (error) {

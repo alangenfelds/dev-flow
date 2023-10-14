@@ -8,8 +8,8 @@ import {
   GetTopInteractedTagsParams,
 } from "./shared.types";
 import Tag, { ITag } from "@/database/tag.model";
-import { FilterQuery } from "mongoose";
 import Question from "@/database/question.model";
+import { FilterQuery } from "mongoose";
 
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
@@ -34,15 +34,39 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   }
 }
 
-export async function getAllTags({ searchQuery }: GetAllTagsParams) {
+export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const query: FilterQuery<typeof Tag> = searchQuery
-      ? { name: { $regex: new RegExp(searchQuery, "i") } }
-      : {};
+    const { searchQuery, filter } = params;
 
-    const tags = await Tag.find(query);
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
+    let sortOptions = {};
+
+    switch (filter) {
+      case "popular":
+        sortOptions = { questions: -1 };
+        break;
+      case "recent":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "name":
+        sortOptions = { name: 1 };
+        break;
+      case "old":
+        sortOptions = { createdAt: 1 };
+        break;
+
+      default:
+        break;
+    }
+
+    const tags = await Tag.find(query).sort(sortOptions);
 
     return { tags };
   } catch (error) {
@@ -51,14 +75,12 @@ export async function getAllTags({ searchQuery }: GetAllTagsParams) {
   }
 }
 
-export async function getQuestionsByTagId({
-  tagId,
-  page = 1,
-  pageSize = 10,
-  searchQuery,
-}: GetQuestionsByTagIdParams) {
+export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
   try {
     connectToDatabase();
+
+    // eslint-disable-next-line no-unused-vars
+    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
@@ -80,6 +102,8 @@ export async function getQuestionsByTagId({
     if (!tag) {
       throw new Error("Tag not found");
     }
+
+    console.log(tag);
 
     const questions = tag.questions;
 

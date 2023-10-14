@@ -1,6 +1,6 @@
 import UserCard from "@/components/cards/UserCard";
 import Filter from "@/components/shared/Filter";
-import LocalSearchbar from "@/components/shared/search/LocalSearchBar";
+import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
@@ -17,7 +17,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       <h1 className="h1-bold text-dark100_light900">All Users</h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-        <LocalSearchbar
+        <LocalSearchBar
           route="/community"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"

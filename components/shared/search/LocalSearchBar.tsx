@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
-interface Props {
+interface CustomInputProps {
   route: string;
-  iconPosition: "left" | "right";
+  iconPosition: string;
   imgSrc: string;
   placeholder: string;
   otherClasses?: string;
@@ -20,7 +20,7 @@ const LocalSearchBar = ({
   imgSrc,
   placeholder,
   otherClasses,
-}: Props) => {
+}: CustomInputProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -40,11 +40,13 @@ const LocalSearchBar = ({
 
         router.push(newUrl, { scroll: false });
       } else {
+        console.log(route, pathname);
         if (pathname === route) {
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
             keysToRemove: ["q"],
           });
+
           router.push(newUrl, { scroll: false });
         }
       }
@@ -60,27 +62,27 @@ const LocalSearchBar = ({
       {iconPosition === "left" && (
         <Image
           src={imgSrc}
+          alt="search icon"
           width={24}
           height={24}
-          alt="search icon"
           className="cursor-pointer"
         />
       )}
+
       <Input
         type="text"
         placeholder={placeholder}
         value={search}
+        onChange={(e) => setSearch(e.target.value)}
         className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
-        onChange={(e) => {
-          setSearch(e.target.value);
-        }}
       />
+
       {iconPosition === "right" && (
         <Image
           src={imgSrc}
+          alt="search icon"
           width={24}
           height={24}
-          alt="search icon"
           className="cursor-pointer"
         />
       )}

@@ -261,6 +261,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
   try {
     connectToDatabase();
 
+    // eslint-disable-next-line no-unused-vars
     const { userId, page = 1, pageSize = 10 } = params;
 
     const totalQuestions = await Question.countDocuments({ author: userId });
@@ -281,6 +282,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
   try {
     connectToDatabase();
 
+    // eslint-disable-next-line no-unused-vars
     const { userId, page = 1, pageSize = 10 } = params;
 
     const totalAnswers = await Answer.countDocuments({ author: userId });
