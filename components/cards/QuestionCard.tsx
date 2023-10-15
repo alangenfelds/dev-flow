@@ -1,26 +1,34 @@
-import React from "react";
 import Link from "next/link";
+import React from "react";
 import RenderTag from "../shared/RenderTag";
 import Metric from "../shared/Metric";
 import { formatAndDivideNumber, getTimestamp } from "@/lib/utils";
 import { SignedIn } from "@clerk/nextjs";
 import EditDeleteAction from "../shared/EditDeleteAction";
 
-type Props = {
+interface QuestionProps {
   _id: string;
   title: string;
-  clerkId?: string | null;
-  tags: { _id: string; name: string }[];
-  author: { _id: string; clerkId: string; name: string; picture: string };
+  tags: {
+    _id: string;
+    name: string;
+  }[];
+  author: {
+    clerkId: string;
+    _id: string;
+    name: string;
+    picture: string;
+  };
   upvotes: string[];
   views: number;
-  answers: string[];
+  answers: Array<object>;
   createdAt: Date;
-};
+  clerkId?: string | null;
+}
 
 const QuestionCard = ({
-  _id,
   clerkId,
+  _id,
   title,
   tags,
   author,
@@ -28,7 +36,7 @@ const QuestionCard = ({
   views,
   answers,
   createdAt,
-}: Props) => {
+}: QuestionProps) => {
   const showActionButtons = clerkId && clerkId === author.clerkId;
 
   return (
@@ -58,38 +66,36 @@ const QuestionCard = ({
         ))}
       </div>
 
-      <div className="flex-between mt-6 flex w-full flex-wrap gap-3">
+      <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
-          imgUrl="/assets/icons/avatar.svg"
+          imgUrl={author.picture}
           alt="user"
           value={author.name}
           title={` - asked ${getTimestamp(createdAt)}`}
-          textStyles="body-medium text-dark400_light700"
-          href={`profile/${author._id}`}
+          href={`/profile/${author._id}`}
           isAuthor
+          textStyles="body-medium text-dark400_light700"
         />
 
         <Metric
           imgUrl="/assets/icons/like.svg"
-          alt="upvotes"
+          alt="Upvotes"
           value={formatAndDivideNumber(upvotes.length)}
-          title="Votes"
+          title=" Votes"
           textStyles="small-medium text-dark400_light800"
         />
-
         <Metric
           imgUrl="/assets/icons/message.svg"
-          alt="answers"
+          alt="message"
           value={formatAndDivideNumber(answers.length)}
-          title="Answers"
+          title=" Answers"
           textStyles="small-medium text-dark400_light800"
         />
-
         <Metric
           imgUrl="/assets/icons/eye.svg"
-          alt="views"
+          alt="eye"
           value={formatAndDivideNumber(views)}
-          title="Views"
+          title=" Views"
           textStyles="small-medium text-dark400_light800"
         />
       </div>

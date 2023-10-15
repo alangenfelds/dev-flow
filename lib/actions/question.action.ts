@@ -71,9 +71,13 @@ export async function createQuestion({
 export const getQuestions = async ({
   searchQuery,
   filter,
+  page = 1,
+  pageSize = 20,
 }: GetQuestionsParams) => {
   try {
     connectToDatabase();
+
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Question> = {};
 
@@ -112,9 +116,14 @@ export const getQuestions = async ({
         path: "author",
         model: User,
       })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort(sortOptions);
 
-    return { questions };
+    const totalQuestions = await Question.countDocuments(query);
+    const isNext = totalQuestions > skipAmount + questions.length;
+
+    return { questions, isNext };
   } catch (error) {
     console.log(error);
   }
