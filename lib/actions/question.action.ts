@@ -83,7 +83,7 @@ export const getQuestions = async ({
   searchQuery,
   filter,
   page = 1,
-  pageSize = 20,
+  pageSize = 10,
 }: GetQuestionsParams) => {
   try {
     connectToDatabase();
