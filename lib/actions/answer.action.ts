@@ -8,6 +8,7 @@ import {
   DeleteAnswerParams,
   GetAnswersParams,
 } from "./shared.types";
+import User from "@/database/user.model";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import Interaction from "@/database/interaction.model";
@@ -21,11 +22,21 @@ export async function createAnswer(params: CreateAnswerParams) {
     const newAnswer = await Answer.create({ content, author, question });
 
     // Add the answer to the question's answers array
-    await Question.findByIdAndUpdate(question, {
+    const questionObject = await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
     });
 
-    // TODO: Add interaction...
+    // Create an interaction record for the user's ask_question action
+    await Interaction.create({
+      user: author,
+      action: "answer",
+      question,
+      answer: newAnswer._id,
+      tags: questionObject.tags,
+    });
+
+    // Increment author's reputation by 10 for creating an answer
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
     revalidatePath(path);
   } catch (error) {
@@ -108,7 +119,15 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
       throw new Error("Answer not found");
     }
 
-    // Increment author's reputation
+    // Increment author's reputation for upvoting/downvoting other answers
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -2 : 2 },
+    });
+
+    // Increment author's reputation for reveiving upvotes/downvotes from other users
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
@@ -144,7 +163,15 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
       throw new Error("Answer not found");
     }
 
-    // Increment author's reputation
+    // Increment author's reputation for upvoting/downvoting other answers
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasdownVoted ? -2 : 2 },
+    });
+
+    // Increment author's reputation for reveiving upvotes/downvotes from other users
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasdownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
